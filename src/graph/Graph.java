@@ -41,7 +41,7 @@ public class Graph {
             Pair<Vertex,Double> minPair = new Pair<>(new Vertex("dummy",0,0),0.0);
             for (Vertex v : visited) {
                 for (Pair<Vertex,Double> pair : adjList.get(v)) {
-                    if (pair.getValue()<minValue) {
+                    if (pair.getValue()<minValue && !minSpanning.adjList.containsKey(pair.getKey())) {
                         minValue = pair.getValue();
                         minPair = pair;
                     }
@@ -49,6 +49,7 @@ public class Graph {
                 minSpanning.addVertex(minPair.getKey());
                 minSpanning.addEdge(v,minPair.getKey());
             }
+            visited.add(minPair.getKey());
 
         }
         return minSpanning;
@@ -61,8 +62,19 @@ public class Graph {
 
     @Override
     public String toString() {
-        return "Graph{" +
-                "adjList=" + adjList +
-                '}';
+        String string = "Vertices: [";
+        for (Vertex vertex: adjList.keySet()
+             ) {
+            string += vertex.toString();
+        }
+        String string2 = "Edges: [";
+        for (Vertex vertex: adjList.keySet()){
+            for (Pair<Vertex,Double> pair: adjList.get(vertex)){
+                String edge = vertex.getLabel() + pair.getKey().getLabel() + "\n"
+                        + "Weight: " + pair.getValue();
+                string2 += edge + " ";
+            }
+        }
+        return string + "\n" + string2;
     }
 }
