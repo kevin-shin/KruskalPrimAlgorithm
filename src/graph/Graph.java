@@ -47,10 +47,8 @@ public class Graph {
                     }
                 }
 
-                if (!minSpanning.adjList.containsKey(minPair.getKey())) {
-                    minSpanning.addVertex(minPair.getKey());
-                    minSpanning.addEdge(v, minPair.getKey());
-                }
+                minSpanning.addVertex(minPair.getKey());
+                minSpanning.addEdge(v, minPair.getKey());
             }
             visited.add(minPair.getKey());
 
