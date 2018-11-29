@@ -46,8 +46,11 @@ public class Graph {
                         minPair = pair;
                     }
                 }
-                minSpanning.addVertex(minPair.getKey());
-                minSpanning.addEdge(v,minPair.getKey());
+
+                if (!minSpanning.adjList.containsKey(minPair.getKey())) {
+                    minSpanning.addVertex(minPair.getKey());
+                    minSpanning.addEdge(v, minPair.getKey());
+                }
             }
             visited.add(minPair.getKey());
 
