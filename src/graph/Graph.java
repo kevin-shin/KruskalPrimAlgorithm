@@ -58,4 +58,11 @@ public class Graph {
         return prim(this.root);
 
     }
+
+    @Override
+    public String toString() {
+        return "Graph{" +
+                "adjList=" + adjList +
+                '}';
+    }
 }
