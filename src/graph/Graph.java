@@ -78,16 +78,12 @@ public class Graph {
         StringBuilder vertices = new StringBuilder("Graph:{\n\tVertices:");
         vertices.append(adjList.keySet().toString());
 
-        StringBuilder edges = new StringBuilder("\tEdges:");
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
+        StringBuilder edgeStr = new StringBuilder("\tEdges:");
+        TreeSet<Edge> edge = new TreeSet<>();
         for (Vertex vertex : adjList.keySet()) {
-            for (Edge e : adjList.get(vertex)) {
-                if (!pq.contains(e)) {
-                    pq.add(e);
-                }
-            }
+            edge.addAll(adjList.get(vertex));
         }
-        edges.append(pq.toString());
-        return vertices.append("\n").append(edges.toString()).append("\n}").toString();
+        edgeStr.append(edge.toString());
+        return vertices.append("\n").append(edgeStr.toString()).append("\n}").toString();
     }
 }
