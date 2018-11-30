@@ -1,5 +1,6 @@
 package graph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Vertex {
@@ -7,8 +8,10 @@ public class Vertex {
     private String label;
     private double x;
     private double y;
+    private ArrayList<Edge> neighbors;
 
     public Vertex(String label, double x, double y) {
+        this.neighbors = new ArrayList<>();
         this.label = label;
         this.x = x;
         this.y = y;

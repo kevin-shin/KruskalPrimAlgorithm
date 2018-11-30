@@ -2,14 +2,11 @@ package graph;
 
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Graph {
 
-    private HashMap<Vertex,ArrayList<Pair<Vertex,Double>>> adjList;
+    public HashMap<Vertex, PriorityQueue<Edge>> adjList;
     private Vertex root;
 
     public Graph() {
@@ -17,9 +14,14 @@ public class Graph {
     }
 
     public void addEdge(Vertex v1, Vertex v2) {
-        double weight = Vertex.distance(v1,v2);
-        adjList.get(v1).add(new Pair<>(v2,weight));
-        adjList.get(v2).add(new Pair<>(v1,weight));
+        double weight = Vertex.distance(v1, v2);
+        Edge e = new Edge(weight, v1, v2);
+        if (!adjList.get(v1).contains(e)) {
+            adjList.get(v1).add(e);
+        }
+        if (!adjList.get(v2).contains(e)) {
+            adjList.get(v2).add(e);
+        }
 
     }
 
@@ -27,31 +29,28 @@ public class Graph {
         if (adjList.isEmpty()) {
             root = v;
         }
-        adjList.put(v,new ArrayList<>());
+        adjList.putIfAbsent(v, new PriorityQueue<>());
     }
 
     public Graph prim(Vertex root) {
-        ArrayList<Vertex> visited = new ArrayList<>();
         Graph minSpanning = new Graph();
         minSpanning.addVertex(root);
-        visited.add(root);
-
-        while (minSpanning.adjList.size()<this.adjList.size()) {
-            double minValue = Double.MAX_VALUE;
-            Pair<Vertex,Double> minPair = new Pair<>(new Vertex("dummy",0,0),0.0);
-            for (Vertex v : visited) {
-                for (Pair<Vertex,Double> pair : adjList.get(v)) {
-                    if (pair.getValue()<minValue && !minSpanning.adjList.containsKey(pair.getKey())) {
-                        minValue = pair.getValue();
-                        minPair = pair;
-                    }
+        Edge minEdge = adjList.get(root).peek();
+        PriorityQueue<Edge> allEdges = new PriorityQueue<>();
+        for (PriorityQueue<Edge> edges : this.adjList.values()) {
+            allEdges.addAll(edges);
+        }
+        while (minSpanning.adjList.size() < this.adjList.size()) {
+            for (Edge edge : allEdges) {
+                if (minSpanning.adjList.containsKey(edge.getVertex1()) ^
+                        minSpanning.adjList.containsKey(edge.getVertex2())) {
+                    minEdge = edge;
+                    break;
                 }
-
-                minSpanning.addVertex(minPair.getKey());
-                minSpanning.addEdge(v, minPair.getKey());
             }
-            visited.add(minPair.getKey());
-
+            minSpanning.addVertex(minEdge.getVertex1());
+            minSpanning.addVertex(minEdge.getVertex2());
+            minSpanning.addEdge(minEdge.getVertex1(), minEdge.getVertex2());
         }
         return minSpanning;
     }
@@ -64,16 +63,15 @@ public class Graph {
     @Override
     public String toString() {
         String string = "Vertices: [";
-        for (Vertex vertex: adjList.keySet()
-             ) {
+        for (Vertex vertex : adjList.keySet()
+                ) {
             string += vertex.toString();
         }
         String string2 = "Edges: [";
-        for (Vertex vertex: adjList.keySet()){
-            for (Pair<Vertex,Double> pair: adjList.get(vertex)){
-                String edge = vertex.getLabel() + pair.getKey().getLabel() + "\n"
-                        + "Weight: " + pair.getValue();
-                string2 += edge + " ";
+        for (Vertex vertex : adjList.keySet()) {
+            for (Edge e : adjList.get(vertex)) {
+
+                string2 += e.toString() + " ";
             }
         }
         return string + "\n" + string2;
