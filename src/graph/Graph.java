@@ -13,7 +13,7 @@ public class Graph {
         adjList = new HashMap<>();
     }
 
-    public void addEdge(Vertex v1, Vertex v2) {
+    public Edge addEdge(Vertex v1, Vertex v2) {
         double weight = Vertex.distance(v1, v2);
         Edge e = new Edge(weight, v1, v2);
         if (!adjList.get(v1).contains(e)) {
@@ -22,11 +22,11 @@ public class Graph {
         if (!adjList.get(v2).contains(e)) {
             adjList.get(v2).add(e);
         }
-
+        return e;
     }
 
-    public void addEdge(Edge e) {
-        addEdge(e.getVertex1(),e.getVertex2());
+    public Edge addEdge(Edge e) {
+        return addEdge(e.getVertex1(),e.getVertex2());
     }
 
     public void addVertex(Vertex... v) {
@@ -38,6 +38,10 @@ public class Graph {
         }
     }
 
+    public boolean containsVertex(Vertex v) {
+        return this.getAdjList().containsKey(v);
+    }
+
     public Graph prim(Vertex root) {
         Graph minSpanning = new Graph();
         minSpanning.addVertex(root);
@@ -46,20 +50,23 @@ public class Graph {
 
         while (minSpanning.getAdjList().size() < this.adjList.size()) {
             for (Edge edge : allEdges) {
-                if (minSpanning.getAdjList().containsKey(edge.getVertex1()) ^
-                        minSpanning.getAdjList().containsKey(edge.getVertex2())) {
+                Vertex vertex1 = edge.getVertex1();
+                Vertex vertex2 = edge.getVertex2();
+                if (minSpanning.containsVertex(vertex1) ^ minSpanning.containsVertex(vertex2)) {
                     minEdge = edge;
                     break;
                 }
             }
 
-            Vertex added = minSpanning.getAdjList().containsKey(minEdge.getVertex1())
-                    ? minEdge.getVertex2() : minEdge.getVertex2();
+            Vertex added = minSpanning.containsVertex(minEdge.getVertex1()) ?
+                    minEdge.getVertex2() : minEdge.getVertex1();
             minSpanning.addVertex(added);
             minSpanning.addEdge(minEdge);
 
             for (Edge e : this.adjList.get(added)) {
-                if (!allEdges.contains(e)) allEdges.add(e);
+                if (!allEdges.contains(e)){
+                    allEdges.add(e);
+                }
             }
         }
         return minSpanning;
@@ -76,18 +83,19 @@ public class Graph {
 
     @Override
     public String toString() {
-        String string = "Vertices: [";
-        for (Vertex vertex : adjList.keySet()
-                ) {
-            string += vertex.toString();
-        }
-        String string2 = "Edges: [";
+        StringBuilder vertices = new StringBuilder("Graph:{\n\tVertices:");
+        vertices.append(adjList.keySet().toString());
+
+        StringBuilder edges = new StringBuilder("\tEdges:");
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
         for (Vertex vertex : adjList.keySet()) {
             for (Edge e : adjList.get(vertex)) {
-
-                string2 += e.toString() + " ";
+                if (!pq.contains(e)) {
+                    pq.add(e);
+                }
             }
         }
-        return string + "\n" + string2;
+        edges.append(pq.toString());
+        return vertices.append("\n").append(edges.toString()).append("\n}").toString();
     }
 }

@@ -6,7 +6,7 @@ public class Edge implements Comparable<Edge> {
     private double weight;
 
 
-    public Edge(double weight, Vertex vertex1, Vertex vertex2){
+    public Edge(double weight, Vertex vertex1, Vertex vertex2) {
         this.vertex1 = vertex1;
         this.vertex2 = vertex2;
         this.weight = weight;
@@ -32,13 +32,13 @@ public class Edge implements Comparable<Edge> {
         return false;
     }
 
-    public String toString(){
-        return this.vertex1.getLabel() + "->" + this.vertex2.getLabel() + "(" + weight + ")";
+    public String toString() {
+        return this.vertex1.getLabel() + this.vertex2.getLabel() + " (" + weight + ")";
     }
 
 
     @Override
     public int compareTo(Edge o) {
-        return Double.compare(this.weight,o.weight);
+        return Double.compare(this.weight, o.weight);
     }
 }
