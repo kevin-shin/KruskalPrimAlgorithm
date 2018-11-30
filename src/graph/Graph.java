@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Graph {
 
-    private HashMap<Vertex, PriorityQueue<Edge>> adjList;
+    private HashMap<Vertex, TreeSet<Edge>> adjList;
     private Vertex root;
 
     public Graph() {
@@ -16,17 +16,14 @@ public class Graph {
     public Edge addEdge(Vertex v1, Vertex v2) {
         double weight = Vertex.distance(v1, v2);
         Edge e = new Edge(weight, v1, v2);
-        if (!adjList.get(v1).contains(e)) {
-            adjList.get(v1).add(e);
-        }
-        if (!adjList.get(v2).contains(e)) {
-            adjList.get(v2).add(e);
-        }
+        adjList.get(v1).add(e);
+        adjList.get(v2).add(e);
+
         return e;
     }
 
     public Edge addEdge(Edge e) {
-        return addEdge(e.getVertex1(),e.getVertex2());
+        return addEdge(e.getVertex1(), e.getVertex2());
     }
 
     public void addVertex(Vertex... v) {
@@ -34,7 +31,7 @@ public class Graph {
             root = v[0];
         }
         for (Vertex w : v) {
-            adjList.putIfAbsent(w, new PriorityQueue<>());
+            adjList.putIfAbsent(w, new TreeSet<>());
         }
     }
 
@@ -45,8 +42,8 @@ public class Graph {
     public Graph prim(Vertex root) {
         Graph minSpanning = new Graph();
         minSpanning.addVertex(root);
-        Edge minEdge = this.adjList.get(root).peek();
-        PriorityQueue<Edge> allEdges = new PriorityQueue<>(this.adjList.get(root));
+        Edge minEdge = this.adjList.get(root).first();
+        TreeSet<Edge> allEdges = new TreeSet<>(this.adjList.get(root));
 
         while (minSpanning.getAdjList().size() < this.adjList.size()) {
             for (Edge edge : allEdges) {
@@ -62,12 +59,7 @@ public class Graph {
                     minEdge.getVertex2() : minEdge.getVertex1();
             minSpanning.addVertex(added);
             minSpanning.addEdge(minEdge);
-
-            for (Edge e : this.adjList.get(added)) {
-                if (!allEdges.contains(e)){
-                    allEdges.add(e);
-                }
-            }
+            allEdges.addAll(this.adjList.get(added));
         }
         return minSpanning;
     }
@@ -77,7 +69,7 @@ public class Graph {
 
     }
 
-    public HashMap<Vertex, PriorityQueue<Edge>> getAdjList() {
+    public HashMap<Vertex, TreeSet<Edge>> getAdjList() {
         return adjList;
     }
 

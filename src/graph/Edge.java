@@ -27,7 +27,8 @@ public class Edge implements Comparable<Edge> {
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Edge) {
             Edge edge = (Edge) obj;
-            return this.vertex1.equals(edge.vertex1) && this.vertex2.equals(edge.vertex2);
+            return this.vertex1.equals(edge.vertex1)
+                    && this.vertex2.equals(edge.vertex2) && this.weight==edge.weight;
         }
         return false;
     }
@@ -41,4 +42,5 @@ public class Edge implements Comparable<Edge> {
     public int compareTo(Edge o) {
         return Double.compare(this.weight, o.weight);
     }
+
 }
