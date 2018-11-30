@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Graph {
 
-    public HashMap<Vertex, PriorityQueue<Edge>> adjList;
+    private HashMap<Vertex, PriorityQueue<Edge>> adjList;
     private Vertex root;
 
     public Graph() {
@@ -25,32 +25,42 @@ public class Graph {
 
     }
 
-    public void addVertex(Vertex v) {
+    public void addEdge(Edge e) {
+        addEdge(e.getVertex1(),e.getVertex2());
+    }
+
+    public void addVertex(Vertex... v) {
         if (adjList.isEmpty()) {
-            root = v;
+            root = v[0];
         }
-        adjList.putIfAbsent(v, new PriorityQueue<>());
+        for (Vertex w : v) {
+            adjList.putIfAbsent(w, new PriorityQueue<>());
+        }
     }
 
     public Graph prim(Vertex root) {
         Graph minSpanning = new Graph();
         minSpanning.addVertex(root);
-        Edge minEdge = adjList.get(root).peek();
-        PriorityQueue<Edge> allEdges = new PriorityQueue<>();
-        for (PriorityQueue<Edge> edges : this.adjList.values()) {
-            allEdges.addAll(edges);
-        }
-        while (minSpanning.adjList.size() < this.adjList.size()) {
+        Edge minEdge = this.adjList.get(root).peek();
+        PriorityQueue<Edge> allEdges = new PriorityQueue<>(this.adjList.get(root));
+
+        while (minSpanning.getAdjList().size() < this.adjList.size()) {
             for (Edge edge : allEdges) {
-                if (minSpanning.adjList.containsKey(edge.getVertex1()) ^
-                        minSpanning.adjList.containsKey(edge.getVertex2())) {
+                if (minSpanning.getAdjList().containsKey(edge.getVertex1()) ^
+                        minSpanning.getAdjList().containsKey(edge.getVertex2())) {
                     minEdge = edge;
                     break;
                 }
             }
-            minSpanning.addVertex(minEdge.getVertex1());
-            minSpanning.addVertex(minEdge.getVertex2());
-            minSpanning.addEdge(minEdge.getVertex1(), minEdge.getVertex2());
+
+            Vertex added = minSpanning.getAdjList().containsKey(minEdge.getVertex1())
+                    ? minEdge.getVertex2() : minEdge.getVertex2();
+            minSpanning.addVertex(added);
+            minSpanning.addEdge(minEdge);
+
+            for (Edge e : this.adjList.get(added)) {
+                if (!allEdges.contains(e)) allEdges.add(e);
+            }
         }
         return minSpanning;
     }
@@ -58,6 +68,10 @@ public class Graph {
     public Graph prim() {
         return prim(this.root);
 
+    }
+
+    public HashMap<Vertex, PriorityQueue<Edge>> getAdjList() {
+        return adjList;
     }
 
     @Override

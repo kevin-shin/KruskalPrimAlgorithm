@@ -10,11 +10,7 @@ public class primTest {
         Vertex vertex3 = new Vertex("C",0,4);
         Vertex vertex4 = new Vertex("D",0,5);
 
-        graph.addVertex(vertex);
-        graph.addVertex(vertex2);
-        graph.addVertex(vertex3);
-        graph.addVertex(vertex4);
-
+        graph.addVertex(vertex,vertex2,vertex3,vertex4);
 
         graph.addEdge(vertex,vertex2);
         graph.addEdge(vertex2,vertex3);
@@ -23,7 +19,6 @@ public class primTest {
 
 
         System.out.println(graph.prim().toString());
-        System.out.println(graph.adjList);
     }
 
 
