@@ -73,6 +73,14 @@ public class Graph {
         return adjList;
     }
 
+    public TreeSet<Edge> getAllEdges() {
+        TreeSet<Edge> edges = new TreeSet<>();
+        for (Vertex v: this.adjList.keySet()) {
+            edges.addAll(this.adjList.get(v));
+        }
+        return edges;
+    }
+
     @Override
     public String toString() {
         StringBuilder vertices = new StringBuilder("Graph:{\n\tVertices:");
