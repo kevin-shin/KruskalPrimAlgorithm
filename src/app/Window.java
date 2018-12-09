@@ -1,11 +1,15 @@
 package app;
 
 import graph.Graph;
+import graph.Vertex;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class Window extends JFrame {
 
@@ -27,8 +31,8 @@ public class Window extends JFrame {
         this.panel.add(kruskalButton);
         this.panel.add(primButton);
 
-        this.setPreferredSize(new Dimension(650, 350));
-        graphPanel.setPreferredSize(new Dimension(620, 317));
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        graphPanel.setPreferredSize(new Dimension(1200, 600));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.getContentPane().add(panel);
 
