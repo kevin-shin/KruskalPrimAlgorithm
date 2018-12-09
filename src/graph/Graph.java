@@ -53,7 +53,9 @@ public class Graph {
            Edge cheapest = cheapestEdgetoTake(minSpannning);
            minSpannning.addEdge(cheapest);
            this.kruskalEdgeOrder.add(cheapest);
+
        }
+       System.out.println("Kruskal algorithm edge size: " + this.kruskalEdgeOrder.size());
        return minSpannning;
     }
 

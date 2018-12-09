@@ -44,6 +44,7 @@ public class GraphVisualizer extends JPanel {
     private ArrayList<Edge> primEdgeOrder;
     private Timer kruskalTimer;
     private Timer primTimer;
+    private boolean algorithmDone;
 
 
     public GraphVisualizer(Graph g) {
@@ -84,27 +85,27 @@ public class GraphVisualizer extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(map, 0, 0, null);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.drawImage(map, 0, 0, null);
 
         g2.setStroke(new BasicStroke(EDGE_WIDTH));
-
         g2.setColor(Color.BLACK);
         if (lastPressX >= 0 && lastPressY >= 0) {
             g2.draw(new Line2D.Double(lastPressX, lastPressY, currentX, currentY));
         }
-        for (Edge e : graph.getAllEdges()) {
-            g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
-                    e.getVertex2().getX(), e.getVertex2().getY()));
-        }
-        for (Vertex v : this.graph.getAdjList().keySet()) {
-            Ellipse2D node = new Ellipse2D.Double(v.getX() - VERTEX_WIDTH / 2, v.getY() - VERTEX_WIDTH / 2,
-                    VERTEX_WIDTH, VERTEX_WIDTH);
-            g2.fill(node);
-            g2.draw(node);
-        }
 
+        if (!algorithmDone) {
+            for (Edge e : graph.getAllEdges()) {
+                g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
+                        e.getVertex2().getX(), e.getVertex2().getY()));
+            }
+            for (Vertex v : this.graph.getAdjList().keySet()) {
+                Ellipse2D node = new Ellipse2D.Double(v.getX() - VERTEX_WIDTH / 2, v.getY() - VERTEX_WIDTH / 2,
+                        VERTEX_WIDTH, VERTEX_WIDTH);
+                g2.fill(node);
+                g2.draw(node);
+            }
+        }
         if (!kruskalToDraw.isEmpty()) {
-            g2.setColor(Color.PINK);
+            g2.setColor(Color.MAGENTA);
             for (Edge e : this.kruskalToDraw) {
                 g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY()));
@@ -112,10 +113,13 @@ public class GraphVisualizer extends JPanel {
         }
 
         else if (!primToDraw.isEmpty()) {
-            g2.setColor(Color.CYAN);
+            g2.setColor(Color.BLUE);
             for (Edge e : this.primToDraw) {
-                g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
-                        e.getVertex2().getX(), e.getVertex2().getY()));
+                Line2D edge = new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
+                        e.getVertex2().getX(), e.getVertex2().getY());
+                g2.fill(edge);
+                g2.setColor(Color.WHITE);
+                g2.draw(edge);
             }
         }
 
@@ -139,6 +143,8 @@ public class GraphVisualizer extends JPanel {
         repaint();
         if (kruskalEdgeOrder.size() == 0) {
             kruskalTimer.stop();
+            algorithmDone = true;
+
         }
     }
 
@@ -147,10 +153,12 @@ public class GraphVisualizer extends JPanel {
         repaint();
         if (primEdgeOrder.size() == 0) {
             primTimer.stop();
+            algorithmDone = true;
         }
     }
 
     public void completeGraph() {
+        algorithmDone = false;
         Graph completegraph = new Graph();
         for (Vertex vertex : this.graph.getAdjList().keySet()) {
             completegraph.addVertex(vertex);
@@ -175,9 +183,6 @@ public class GraphVisualizer extends JPanel {
                             repaint();
 
                         }
-                        System.out.println("Node " + numNodes);
-                        System.out.println("X: " + e.getX() + "/" + "Y: " + e.getY());
-                        numNodes++;
                     }
 
                     @Override

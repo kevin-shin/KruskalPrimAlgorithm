@@ -24,8 +24,6 @@ public class primTest {
         graph.addEdge(vertex5,vertex2);
         graph.addEdge(vertex4,vertex5);
 
-        System.out.println(graph.prim().toString());
-        System.out.println(graph.kruskal().toString());
 
 
 //        Graph graph = new Graph();

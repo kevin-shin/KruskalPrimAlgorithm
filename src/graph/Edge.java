@@ -34,7 +34,7 @@ public class Edge implements Comparable<Edge> {
     }
 
     public String toString() {
-        return this.vertex1.getLabel() + this.vertex2.getLabel() + " (" + weight + ")";
+        return this.vertex1.getLabel() + " <-> " + this.vertex2.getLabel() + " (" + weight + ")";
     }
 
 

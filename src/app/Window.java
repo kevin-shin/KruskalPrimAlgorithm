@@ -44,9 +44,8 @@ public class Window extends JFrame {
 
         kruskalButton.addActionListener(new ButtonListener());
         completeButton.addActionListener(new completeGraphListener());
-
-        kruskalButton.addActionListener(new ButtonListener());
         primButton.addActionListener(new ButtonListener());
+
         this.pack();
         this.setVisible(true);
 
@@ -63,7 +62,7 @@ public class Window extends JFrame {
                 graphPanel.startKruskalAnimation();
             }
 
-            if (e.getSource() == primButton) {
+            else if (e.getSource() == primButton) {
                 graphPanel.getGraph().prim();
                 graphPanel.setPrimEdgeOrder(graphPanel.getGraph().getPrimEdgeOrder());
                 graphPanel.startPrimAnimation();
