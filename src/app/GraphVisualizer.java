@@ -103,16 +103,16 @@ public class GraphVisualizer extends JPanel {
             g2.draw(node);
         }
 
-        g2.setColor(Color.PINK);
-        if (kruskalToDraw != null) {
+        if (!kruskalToDraw.isEmpty()) {
+            g2.setColor(Color.PINK);
             for (Edge e : this.kruskalToDraw) {
                 g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY()));
             }
         }
 
-        g2.setColor(Color.CYAN);
-        if (primToDraw != null) {
+        else if (!primToDraw.isEmpty()) {
+            g2.setColor(Color.CYAN);
             for (Edge e : this.primToDraw) {
                 g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY()));
@@ -128,8 +128,8 @@ public class GraphVisualizer extends JPanel {
     }
 
     public void startPrimAnimation() {
-        primToDraw = new ArrayList<>();
         kruskalToDraw = new ArrayList<>();
+        primToDraw = new ArrayList<>();
         primTimer.start();
     }
 
@@ -162,8 +162,11 @@ public class GraphVisualizer extends JPanel {
                 }
             }
         }
+        this.graph = completegraph;
+        repaint();
     }
-                private class ClickListener implements MouseListener, MouseMotionListener, ActionListener {
+
+    private class ClickListener implements MouseListener, MouseMotionListener, ActionListener {
 
                     @Override
                     public void mouseClicked(MouseEvent e) {
@@ -220,11 +223,11 @@ public class GraphVisualizer extends JPanel {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (e.getSource().equals(kruskalTimer)) {
+                        if (e.getSource() == kruskalTimer) {
                             stepKruskal();
                         }
 
-                        if (e.getSource().equals(primTimer)) {
+                        if (e.getSource() == primTimer) {
                             stepPrim();
                         }
                     }

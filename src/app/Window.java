@@ -26,9 +26,9 @@ public class Window extends JFrame {
 
         kruskalButton = new JButton("Kruskal");
         completeButton = new JButton("Complete Graph");
+        primButton = new JButton("Prim");
 
-        kruskalButton = new JButton("Kruskal's");
-        primButton = new JButton("Prim's");
+
         this.graphPanel = new GraphVisualizer(g);
         this.panel = new JPanel();
 
@@ -44,8 +44,6 @@ public class Window extends JFrame {
 
         kruskalButton.addActionListener(new ButtonListener());
         completeButton.addActionListener(new completeGraphListener());
-
-
 
         kruskalButton.addActionListener(new ButtonListener());
         primButton.addActionListener(new ButtonListener());
