@@ -23,12 +23,13 @@ public class GraphVisualizer extends JPanel {
     private static final int VERTEX_WIDTH = 10;
     private static final int EDGE_WIDTH = 2;
     private static BufferedImage map;
+    private int numNodes = 0;
 
     static {
         //load in the background image
         map = null;
         try {
-            map = ImageIO.read(new File("res/MacalesterMap.png"));
+            map = ImageIO.read(new File("res/MacalesterMapResized.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,6 +119,9 @@ public class GraphVisualizer extends JPanel {
                 repaint();
 
             }
+            System.out.println("Node " + numNodes);
+            System.out.println("X: " + e.getX() + "/" + "Y: " + e.getY());
+            numNodes++;
         }
 
         @Override
