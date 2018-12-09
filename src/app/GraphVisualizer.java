@@ -62,6 +62,13 @@ public class GraphVisualizer extends JPanel {
         return graph;
     }
 
+    public void setGraph(Graph graph){
+        this.graph = graph;
+        kruskalToDraw = new ArrayList<>();
+        primToDraw = new ArrayList<>();
+        repaint();
+    }
+
     public void setKruskalEdgeOrder(ArrayList<Edge> kruskalEdgeOrder) {
         this.kruskalEdgeOrder = kruskalEdgeOrder;
     }
@@ -97,13 +104,15 @@ public class GraphVisualizer extends JPanel {
                 g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY()));
             }
-            for (Vertex v : this.graph.getAdjList().keySet()) {
-                Ellipse2D node = new Ellipse2D.Double(v.getX() - VERTEX_WIDTH / 2, v.getY() - VERTEX_WIDTH / 2,
-                        VERTEX_WIDTH, VERTEX_WIDTH);
-                g2.fill(node);
-                g2.draw(node);
-            }
         }
+
+        for (Vertex v : this.graph.getAdjList().keySet()) {
+            Ellipse2D node = new Ellipse2D.Double(v.getX() - VERTEX_WIDTH / 2, v.getY() - VERTEX_WIDTH / 2,
+                    VERTEX_WIDTH, VERTEX_WIDTH);
+            g2.fill(node);
+            g2.draw(node);
+        }
+
         if (!kruskalToDraw.isEmpty()) {
             for (Edge e : this.kruskalToDraw) {
                 g2.setColor(Color.WHITE);
