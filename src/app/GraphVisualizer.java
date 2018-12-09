@@ -28,25 +28,25 @@ public class GraphVisualizer extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        for (Vertex v : this.graph.getAdjList().keySet()) {
-            Ellipse2D node = new Ellipse2D.Double(v.getX() - 5, v.getY() - 5, 10, 10);
-            g2.draw(node);
-            g2.fill(node);
-        }
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(Color.BLACK);
         for (Edge e : graph.getAllEdges()) {
-            g2.setColor(Color.BLACK);
             g2.setStroke(new BasicStroke(2));
             g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                     e.getVertex2().getX(), e.getVertex2().getY()));
         }
+        for (Vertex v : this.graph.getAdjList().keySet()) {
+            Ellipse2D node = new Ellipse2D.Double(v.getX() - 5, v.getY() - 5, 10, 10);
+            g2.fill(node);
+            g2.draw(node);
+
+        }
+
     }
 
     private class ClickListener implements MouseListener {
         @Override
         public void mouseClicked(MouseEvent e) {
-            System.out.println(e.getX() + " " + e.getY());
-            graph.addVertex(new Vertex("", e.getX(), e.getY()));
-            repaint();
             System.out.println(graph);
         }
 

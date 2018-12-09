@@ -8,15 +8,23 @@ public class Main {
 
     public static void main(String args[]) {
         //Testing
-        Graph g = new Graph();
-        Vertex v1 = new Vertex("A", 30, 30);
-        Vertex v2 = new Vertex("B", 50, 85);
-        Vertex v3 = new Vertex("C",100,100);
-        g.addVertex(v1, v2, v3);
-        g.addEdge(v1, v2);
-        g.addEdge(v1,v3);
+        Graph graph = new Graph();
+        Vertex vertex = new Vertex("A",10,10);
+        Vertex vertex2 = new Vertex("B",60,10);
+        Vertex vertex3 = new Vertex("C",10,80);
+        Vertex vertex4 = new Vertex("D",10,100);
+        Vertex vertex5 = new Vertex("E",120,120);
 
-        Window window = new Window(g);
+        graph.addVertex(vertex,vertex2,vertex3,vertex4,vertex5);
+
+        graph.addEdge(vertex,vertex2);
+        graph.addEdge(vertex2,vertex3);
+        graph.addEdge(vertex,vertex3);
+        graph.addEdge(vertex3,vertex4);
+        graph.addEdge(vertex5,vertex2);
+        graph.addEdge(vertex4,vertex5);
+
+        Window window = new Window(graph.prim());
 
     }
 }
