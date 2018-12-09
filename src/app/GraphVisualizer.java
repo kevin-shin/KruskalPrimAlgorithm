@@ -105,21 +105,29 @@ public class GraphVisualizer extends JPanel {
             }
         }
         if (!kruskalToDraw.isEmpty()) {
-            g2.setColor(Color.MAGENTA);
             for (Edge e : this.kruskalToDraw) {
-                g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
-                        e.getVertex2().getX(), e.getVertex2().getY()));
+                g2.setColor(Color.WHITE);
+                g2.setStroke(new BasicStroke(EDGE_WIDTH+2));
+                Line2D edge = new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
+                        e.getVertex2().getX(), e.getVertex2().getY());
+                g2.draw(edge);
+                g2.setColor(Color.MAGENTA);
+                g2.setStroke(new BasicStroke(EDGE_WIDTH));
+                g2.draw(edge);
             }
         }
 
         else if (!primToDraw.isEmpty()) {
-            g2.setColor(Color.BLUE);
             for (Edge e : this.primToDraw) {
+                g2.setColor(Color.WHITE);
+                g2.setStroke(new BasicStroke(EDGE_WIDTH+2));
                 Line2D edge = new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY());
-                g2.fill(edge);
-                g2.setColor(Color.WHITE);
                 g2.draw(edge);
+                g2.setColor(Color.BLUE);
+                g2.setStroke(new BasicStroke(EDGE_WIDTH));
+                g2.draw(edge);
+
             }
         }
 
