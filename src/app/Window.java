@@ -13,7 +13,7 @@ public class Window extends JFrame {
     public Window(Graph g) {
         super("Test");
         this.panel = new GraphVisualizer(g);
-        this.setPreferredSize(new Dimension(287, 638));
+        this.setPreferredSize(new Dimension(620, 317));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.getContentPane().add(panel);
         this.pack();
