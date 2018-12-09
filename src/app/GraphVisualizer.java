@@ -18,14 +18,9 @@ import java.io.IOException;
 
 public class GraphVisualizer extends JPanel {
 
-    private Graph graph;
+    private static final int VERTEX_WIDTH = 10;
+    private static final int EDGE_WIDTH = 2;
     private static BufferedImage map;
-    public static final int VERTEX_WIDTH=10;
-    public static final int EDGE_WIDTH=2;
-    private double lastPressX;
-    private double lastPressY;
-    private double currentX;
-    private double currentY;
 
     static {
         //load in the background image
@@ -36,6 +31,12 @@ public class GraphVisualizer extends JPanel {
             e.printStackTrace();
         }
     }
+
+    private Graph graph;
+    private double lastPressX;
+    private double lastPressY;
+    private double currentX;
+    private double currentY;
 
     public GraphVisualizer(Graph g) {
         super();
@@ -49,9 +50,9 @@ public class GraphVisualizer extends JPanel {
     }
 
     private Vertex vertexAt(double x, double y) {
-        for (Vertex v: graph.getAdjList().keySet()) {
-            if (v.getX()>=x-VERTEX_WIDTH/2 && v.getX()<=x+VERTEX_WIDTH/2 &&
-                    v.getY()>=y-VERTEX_WIDTH/2 && v.getY()<=y+VERTEX_WIDTH) {
+        for (Vertex v : graph.getAdjList().keySet()) {
+            if (v.getX() >= x - VERTEX_WIDTH / 2 && v.getX() <= x + VERTEX_WIDTH / 2 &&
+                    v.getY() >= y - VERTEX_WIDTH / 2 && v.getY() <= y + VERTEX_WIDTH) {
                 return v;
             }
         }
@@ -61,20 +62,20 @@ public class GraphVisualizer extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map,0,0,null);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.drawImage(map, 0, 0, null);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.BLACK);
         g2.setStroke(new BasicStroke(EDGE_WIDTH));
 
-        if (lastPressX>=0 && lastPressY>=0) {
-            g2.draw(new Line2D.Double(lastPressX,lastPressY,currentX,currentY));
+        if (lastPressX >= 0 && lastPressY >= 0) {
+            g2.draw(new Line2D.Double(lastPressX, lastPressY, currentX, currentY));
         }
         for (Edge e : graph.getAllEdges()) {
             g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                     e.getVertex2().getX(), e.getVertex2().getY()));
         }
         for (Vertex v : this.graph.getAdjList().keySet()) {
-            Ellipse2D node = new Ellipse2D.Double(v.getX() - VERTEX_WIDTH/2, v.getY() - VERTEX_WIDTH/2,
+            Ellipse2D node = new Ellipse2D.Double(v.getX() - VERTEX_WIDTH / 2, v.getY() - VERTEX_WIDTH / 2,
                     VERTEX_WIDTH, VERTEX_WIDTH);
             g2.fill(node);
             g2.draw(node);
@@ -87,7 +88,7 @@ public class GraphVisualizer extends JPanel {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (vertexAt(e.getX(),e.getY()) == null) {
+            if (vertexAt(e.getX(), e.getY()) == null) {
                 graph.addVertex(new Vertex(Long.toHexString(System.currentTimeMillis()), e.getX(), e.getY()));
                 repaint();
 
@@ -102,11 +103,11 @@ public class GraphVisualizer extends JPanel {
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            Vertex start = vertexAt(lastPressX,lastPressY);
-            Vertex end = vertexAt(e.getX(),e.getY());
+            Vertex start = vertexAt(lastPressX, lastPressY);
+            Vertex end = vertexAt(e.getX(), e.getY());
 
-            if (start != null && end !=null && !start.equals(end)) {
-                graph.addEdge(start,end);
+            if (start != null && end != null && !start.equals(end)) {
+                graph.addEdge(start, end);
             }
             lastPressX = -10;
             lastPressY = -10;
