@@ -1,19 +1,18 @@
 package graph;
 
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
 
 public class Graph {
 
     private HashMap<Vertex, TreeSet<Edge>> adjList;
     private Vertex root;
-    private ArrayList<Edge> kruskalEdge;
-    private ArrayList<Edge> primEdge;
+    private ArrayList<Edge> kruskalEdgeOrder;
+    private ArrayList<Edge> primEdgeOrder;
 
     public Graph() {
         adjList = new HashMap<>();
-        kruskalEdge = new ArrayList<>();
-        primEdge = new ArrayList<>();
+        kruskalEdgeOrder = new ArrayList<>();
+        primEdgeOrder = new ArrayList<>();
     }
 
     public Edge addEdge(Vertex v1, Vertex v2) {
@@ -49,11 +48,11 @@ public class Graph {
        }
        TreeSet<Edge> edges = getAllEdges();
        minSpannning.addEdge(edges.first());
-       this.kruskalEdge.add(edges.first());
+       this.kruskalEdgeOrder.add(edges.first());
        while (minSpannning.getAllEdges().size()<this.adjList.size()-1){
            Edge cheapest = cheapestEdgetoTake(minSpannning);
            minSpannning.addEdge(cheapest);
-           this.kruskalEdge.add(cheapest);
+           this.kruskalEdgeOrder.add(cheapest);
        }
        return minSpannning;
     }
@@ -114,6 +113,7 @@ public class Graph {
                     minEdge.getVertex2() : minEdge.getVertex1();
             minSpanning.addVertex(added);
             minSpanning.addEdge(minEdge);
+            primEdgeOrder.add(minEdge);
             allEdges.addAll(this.adjList.get(added));
         }
         return minSpanning;
@@ -136,12 +136,12 @@ public class Graph {
         return edges;
     }
 
-    public ArrayList<Edge> getKruskalEdge(){
-        return kruskalEdge;
+    public ArrayList<Edge> getKruskalEdgeOrder(){
+        return kruskalEdgeOrder;
     }
 
-    public ArrayList<Edge> getPrimEdge(){
-        return primEdge;
+    public ArrayList<Edge> getPrimEdgeOrder(){
+        return primEdgeOrder;
     }
 
     @Override

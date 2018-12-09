@@ -7,16 +7,13 @@ import graph.Vertex;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 public class GraphVisualizer extends JPanel {
 
@@ -39,7 +36,12 @@ public class GraphVisualizer extends JPanel {
     private double lastPressY;
     private double currentX;
     private double currentY;
-    private ArrayList<Edge> kruskalEdge;
+    private ArrayList<Edge> kruskalToDraw;
+    private ArrayList<Edge> kruskalEdgeOrder;
+    private ArrayList<Edge> primToDraw;
+    private ArrayList<Edge> primEdgeOrder;
+    private Timer kruskalTimer;
+    private Timer primTimer;
 
 
     public GraphVisualizer(Graph g) {
@@ -47,11 +49,22 @@ public class GraphVisualizer extends JPanel {
         this.graph = g;
         this.addMouseListener(new ClickListener());
         this.addMouseMotionListener(new ClickListener());
-        kruskalEdge = new ArrayList<>();
+        kruskalToDraw = new ArrayList<>();
+        primToDraw = new ArrayList<>();
+        kruskalTimer = new Timer(1000, new ClickListener());
+        primTimer = new Timer(1000, new ClickListener());
     }
 
     public Graph getGraph() {
         return graph;
+    }
+
+    public void setKruskalEdgeOrder(ArrayList<Edge> kruskalEdgeOrder) {
+        this.kruskalEdgeOrder = kruskalEdgeOrder;
+    }
+
+    public void setPrimEdgeOrder(ArrayList<Edge> primEdgeOrder) {
+        this.primEdgeOrder = primEdgeOrder;
     }
 
     private Vertex vertexAt(double x, double y) {
@@ -67,11 +80,12 @@ public class GraphVisualizer extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(map, 0, 0, null);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.BLACK);
+        g2.drawImage(map, 0, 0, null);
+
         g2.setStroke(new BasicStroke(EDGE_WIDTH));
 
+        g2.setColor(Color.BLACK);
         if (lastPressX >= 0 && lastPressY >= 0) {
             g2.draw(new Line2D.Double(lastPressX, lastPressY, currentX, currentY));
         }
@@ -87,36 +101,59 @@ public class GraphVisualizer extends JPanel {
         }
 
         g2.setColor(Color.PINK);
-        if (kruskalEdge != null) {
-            for (Edge e : this.kruskalEdge) {
+        if (kruskalToDraw != null) {
+            for (Edge e : this.kruskalToDraw) {
                 g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY()));
             }
         }
+
+        g2.setColor(Color.CYAN);
+        if (primToDraw != null) {
+            for (Edge e : this.primToDraw) {
+                g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
+                        e.getVertex2().getX(), e.getVertex2().getY()));
+            }
+        }
+
+    }
+
+    public void startKruskalAnimation() {
+        kruskalToDraw = new ArrayList<>();
+        primToDraw = new ArrayList<>();
+        kruskalTimer.start();
+    }
+
+    public void startPrimAnimation() {
+        primToDraw = new ArrayList<>();
+        kruskalToDraw = new ArrayList<>();
+        primTimer.start();
     }
 
 
-    public void paintKruskal(){
-        graph.kruskal();
-        System.out.println("Kruskal Edges: " + graph.getKruskalEdge());
-        ArrayList<Edge> kruskalEdge = graph.getKruskalEdge();
-
-        for (int i = 0; i < kruskalEdge.size(); i++) {
-            this.kruskalEdge.add(kruskalEdge.get(i));
-            repaint();
-            System.out.println("Added Edge: " + kruskalEdge.get(i));
+    public void stepKruskal() {
+        this.kruskalToDraw.add(kruskalEdgeOrder.remove(0));
+        repaint();
+        if (kruskalEdgeOrder.size() == 0) {
+            kruskalTimer.stop();
+        }
+    }
+    public void stepPrim() {
+        this.primToDraw.add(primEdgeOrder.remove(0));
+        repaint();
+        if (primEdgeOrder.size() == 0) {
+            primTimer.stop();
         }
     }
 
 
-    private class ClickListener implements MouseListener, MouseMotionListener {
+    private class ClickListener implements MouseListener, MouseMotionListener, ActionListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
             if (vertexAt(e.getX(), e.getY()) == null) {
                 graph.addVertex(new Vertex(Long.toHexString(System.currentTimeMillis()), e.getX(), e.getY()));
                 repaint();
-
             }
         }
 
@@ -159,6 +196,17 @@ public class GraphVisualizer extends JPanel {
         @Override
         public void mouseMoved(MouseEvent e) {
 
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(kruskalTimer)) {
+                stepKruskal();
+            }
+
+            if (e.getSource().equals(primTimer)) {
+                stepPrim();
+            }
         }
     }
 }
