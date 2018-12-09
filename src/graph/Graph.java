@@ -1,23 +1,21 @@
 package graph;
 
-import javafx.util.Pair;
-
 import java.util.*;
 
 public class Graph {
 
-    private HashMap<Vertex, TreeSet<Edge>> adjList;
+    private HashMap<Vertex, TreeSet<Edge>> adjListEdges;
     private Vertex root;
 
     public Graph() {
-        adjList = new HashMap<>();
+        adjListEdges = new HashMap<>();
     }
 
     public Edge addEdge(Vertex v1, Vertex v2) {
         double weight = Vertex.distance(v1, v2);
         Edge e = new Edge(weight, v1, v2);
-        adjList.get(v1).add(e);
-        adjList.get(v2).add(e);
+        adjListEdges.get(v1).add(e);
+        adjListEdges.get(v2).add(e);
 
         return e;
     }
@@ -27,25 +25,75 @@ public class Graph {
     }
 
     public void addVertex(Vertex... v) {
-        if (adjList.isEmpty()) {
+        if (adjListEdges.isEmpty()) {
             root = v[0];
         }
         for (Vertex w : v) {
-            adjList.putIfAbsent(w, new TreeSet<>());
+            adjListEdges.putIfAbsent(w, new TreeSet<>());
         }
     }
 
     public boolean containsVertex(Vertex v) {
-        return this.getAdjList().containsKey(v);
+        return this.getAdjListEdges().containsKey(v);
     }
+
+    public Graph kruskal(){
+       Graph minSpannning = new Graph();
+       for (Vertex vertex: this.adjListEdges.keySet()) {
+            minSpannning.addVertex(vertex);
+       }
+       TreeSet<Edge> edges = getAllEdges();
+       minSpannning.addEdge(edges.first());
+       while (minSpannning.getAllEdges().size()<this.adjListEdges.size()-1){
+           minSpannning.addEdge(cheapestEdgetoTake(minSpannning));
+       }
+       return minSpannning;
+    }
+
+    public Edge cheapestEdgetoTake(Graph minSpanning){
+        TreeSet<Edge> edges = this.getAllEdges();
+        for (Edge edge: edges) {
+            if (!willFormCycle(edge,minSpanning)){
+                return edge;
+            }
+        }
+        return null;
+    }
+
+
+    public boolean willFormCycle(Edge edge, Graph graph){
+        List<Vertex> visited = new ArrayList<>();
+        Deque<Vertex> stack = new ArrayDeque<>();
+        stack.add(edge.getVertex1());
+        while (stack.size()>0){
+            Vertex vertex = stack.pop();
+            if (!visited.contains(vertex)){
+                visited.add(vertex);
+                for (Edge graphEdge: graph.getAdjListEdges().get(vertex)) {
+                    if (vertex.equals(graphEdge.getVertex1())){
+                        stack.push(graphEdge.getVertex2());
+                    }
+                    else {
+                        stack.push(graphEdge.getVertex1());
+                    }
+                }
+            }
+            if (visited.contains(edge.getVertex2())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     public Graph prim(Vertex root) {
         Graph minSpanning = new Graph();
         minSpanning.addVertex(root);
-        Edge minEdge = this.adjList.get(root).first();
-        TreeSet<Edge> allEdges = new TreeSet<>(this.adjList.get(root));
+        Edge minEdge = this.adjListEdges.get(root).first();
+        TreeSet<Edge> allEdges = new TreeSet<>(this.adjListEdges.get(root));
 
-        while (minSpanning.getAdjList().size() < this.adjList.size()) {
+        while (minSpanning.getAdjListEdges().size() < this.adjListEdges.size()) {
             for (Edge edge : allEdges) {
                 Vertex vertex1 = edge.getVertex1();
                 Vertex vertex2 = edge.getVertex2();
@@ -59,7 +107,7 @@ public class Graph {
                     minEdge.getVertex2() : minEdge.getVertex1();
             minSpanning.addVertex(added);
             minSpanning.addEdge(minEdge);
-            allEdges.addAll(this.adjList.get(added));
+            allEdges.addAll(this.adjListEdges.get(added));
         }
         return minSpanning;
     }
@@ -69,14 +117,14 @@ public class Graph {
 
     }
 
-    public HashMap<Vertex, TreeSet<Edge>> getAdjList() {
-        return adjList;
+    public HashMap<Vertex, TreeSet<Edge>> getAdjListEdges() {
+        return adjListEdges;
     }
 
     public TreeSet<Edge> getAllEdges() {
         TreeSet<Edge> edges = new TreeSet<>();
-        for (Vertex v: this.adjList.keySet()) {
-            edges.addAll(this.adjList.get(v));
+        for (Vertex v: this.adjListEdges.keySet()) {
+            edges.addAll(this.adjListEdges.get(v));
         }
         return edges;
     }
@@ -84,12 +132,12 @@ public class Graph {
     @Override
     public String toString() {
         StringBuilder vertices = new StringBuilder("Graph:{\n\tVertices:");
-        vertices.append(adjList.keySet().toString());
+        vertices.append(adjListEdges.keySet().toString());
 
         StringBuilder edgeStr = new StringBuilder("\tEdges:");
         TreeSet<Edge> edge = new TreeSet<>();
-        for (Vertex vertex : adjList.keySet()) {
-            edge.addAll(adjList.get(vertex));
+        for (Vertex vertex : adjListEdges.keySet()) {
+            edge.addAll(adjListEdges.get(vertex));
         }
         edgeStr.append(edge.toString());
         return vertices.append("\n").append(edgeStr.toString()).append("\n}").toString();

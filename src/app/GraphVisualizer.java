@@ -35,7 +35,7 @@ public class GraphVisualizer extends JPanel {
             g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                     e.getVertex2().getX(), e.getVertex2().getY()));
         }
-        for (Vertex v : this.graph.getAdjList().keySet()) {
+        for (Vertex v : this.graph.getAdjListEdges().keySet()) {
             Ellipse2D node = new Ellipse2D.Double(v.getX() - 5, v.getY() - 5, 10, 10);
             g2.fill(node);
             g2.draw(node);
