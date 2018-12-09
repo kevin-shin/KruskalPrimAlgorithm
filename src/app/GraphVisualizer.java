@@ -23,6 +23,10 @@ public class GraphVisualizer extends JPanel {
     private static BufferedImage map;
     public static final int VERTEX_WIDTH=10;
     public static final int EDGE_WIDTH=2;
+    private double lastPressX;
+    private double lastPressY;
+    private double currentX;
+    private double currentY;
 
     static {
         map = null;
@@ -38,6 +42,7 @@ public class GraphVisualizer extends JPanel {
         super();
         this.graph = g;
         this.addMouseListener(new ClickListener());
+        this.addMouseMotionListener(new ClickListener());
     }
 
     public Graph getGraph() {
@@ -60,8 +65,12 @@ public class GraphVisualizer extends JPanel {
         g2.drawImage(map,0,0,null);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.BLACK);
+        g2.setStroke(new BasicStroke(EDGE_WIDTH));
+
+        if (lastPressX>=0 && lastPressY>=0) {
+            g2.draw(new Line2D.Double(lastPressX,lastPressY,currentX,currentY));
+        }
         for (Edge e : graph.getAllEdges()) {
-            g2.setStroke(new BasicStroke(EDGE_WIDTH));
             g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                     e.getVertex2().getX(), e.getVertex2().getY()));
         }
@@ -75,9 +84,7 @@ public class GraphVisualizer extends JPanel {
 
     }
 
-    private class ClickListener implements MouseListener {
-        private double lastPressX;
-        private double lastPressY;
+    private class ClickListener implements MouseListener, MouseMotionListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -90,8 +97,8 @@ public class GraphVisualizer extends JPanel {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            this.lastPressX = e.getX();
-            this.lastPressY = e.getY();
+            lastPressX = e.getX();
+            lastPressY = e.getY();
             System.out.println("press");
         }
 
@@ -104,7 +111,8 @@ public class GraphVisualizer extends JPanel {
                 graph.addEdge(start,end);
                 System.out.println("EDGE ADDED");
             }
-
+            lastPressX = -10;
+            lastPressY = -10;
             repaint();
             System.out.println("release");
         }
@@ -116,6 +124,18 @@ public class GraphVisualizer extends JPanel {
 
         @Override
         public void mouseExited(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            currentX = e.getX();
+            currentY = e.getY();
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
 
         }
     }
