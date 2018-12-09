@@ -15,7 +15,6 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 public class GraphVisualizer extends JPanel {
 
@@ -29,12 +28,12 @@ public class GraphVisualizer extends JPanel {
     private double currentY;
 
     static {
+        //load in the background image
         map = null;
         try {
             map = ImageIO.read(new File("res/MacalesterMap.png"));
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("broken");
         }
     }
 
@@ -91,7 +90,7 @@ public class GraphVisualizer extends JPanel {
             if (vertexAt(e.getX(),e.getY()) == null) {
                 graph.addVertex(new Vertex(Long.toHexString(System.currentTimeMillis()), e.getX(), e.getY()));
                 repaint();
-                System.out.println(graph);
+
             }
         }
 
@@ -99,7 +98,6 @@ public class GraphVisualizer extends JPanel {
         public void mousePressed(MouseEvent e) {
             lastPressX = e.getX();
             lastPressY = e.getY();
-            System.out.println("press");
         }
 
         @Override
@@ -109,12 +107,10 @@ public class GraphVisualizer extends JPanel {
 
             if (start != null && end !=null && !start.equals(end)) {
                 graph.addEdge(start,end);
-                System.out.println("EDGE ADDED");
             }
             lastPressX = -10;
             lastPressY = -10;
             repaint();
-            System.out.println("release");
         }
 
         @Override
