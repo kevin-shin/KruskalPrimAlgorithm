@@ -1,5 +1,6 @@
 package app;
 
+import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 
@@ -16,17 +17,21 @@ public class Window extends JFrame {
     private GraphVisualizer graphPanel;
     private JPanel panel;
     private JButton kruskalButton;
+    private JButton completeButton;
 
 
     public Window(Graph g) {
         super("Test");
 
         kruskalButton = new JButton("Kruskal");
+        completeButton = new JButton("Complete Graph");
+
         this.graphPanel = new GraphVisualizer(g);
         this.panel = new JPanel();
 
         this.panel.add(graphPanel);
         this.panel.add(kruskalButton);
+        this.panel.add(completeButton);
 
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         graphPanel.setPreferredSize(new Dimension(1200, 600));
@@ -34,6 +39,8 @@ public class Window extends JFrame {
         this.getContentPane().add(panel);
 
         kruskalButton.addActionListener(new kruskalButtonListener());
+        completeButton.addActionListener(new completeGraphListener());
+
         this.pack();
         this.setVisible(true);
 
@@ -58,4 +65,12 @@ public class Window extends JFrame {
         }
     }
 
-}
+    private class completeGraphListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == completeButton) {
+                graphPanel.completeGraph();
+            }
+            }
+        }
+    }

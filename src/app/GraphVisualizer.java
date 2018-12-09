@@ -109,7 +109,21 @@ public class GraphVisualizer extends JPanel {
         }
     }
 
+    public void completeGraph(){
+        Graph completegraph = new Graph();
+        for (Vertex vertex: this.graph.getAdjList().keySet()) {
+            completegraph.addVertex(vertex);
+        }
+        for (Vertex vertex: completegraph.getAdjList().keySet()){
+            for (Vertex otherVertex: completegraph.getAdjList().keySet()) {
+                if (vertex != otherVertex) {
+                    completegraph.addEdge(new Edge(Vertex.distance(vertex, otherVertex), vertex, otherVertex));
+                }
 
+            }
+        }
+        this.graph = completegraph;
+    }
     private class ClickListener implements MouseListener, MouseMotionListener {
 
         @Override
