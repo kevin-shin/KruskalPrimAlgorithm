@@ -15,6 +15,8 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class GraphVisualizer extends JPanel {
 
@@ -37,12 +39,15 @@ public class GraphVisualizer extends JPanel {
     private double lastPressY;
     private double currentX;
     private double currentY;
+    private ArrayList<Edge> kruskalEdge;
+
 
     public GraphVisualizer(Graph g) {
         super();
         this.graph = g;
         this.addMouseListener(new ClickListener());
         this.addMouseMotionListener(new ClickListener());
+        kruskalEdge = new ArrayList<>();
     }
 
     public Graph getGraph() {
@@ -79,10 +84,30 @@ public class GraphVisualizer extends JPanel {
                     VERTEX_WIDTH, VERTEX_WIDTH);
             g2.fill(node);
             g2.draw(node);
-
         }
 
+        g2.setColor(Color.PINK);
+        if (kruskalEdge != null) {
+            for (Edge e : this.kruskalEdge) {
+                g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
+                        e.getVertex2().getX(), e.getVertex2().getY()));
+            }
+        }
     }
+
+
+    public void paintKruskal(){
+        graph.kruskal();
+        System.out.println("Kruskal Edges: " + graph.getKruskalEdge());
+        ArrayList<Edge> kruskalEdge = graph.getKruskalEdge();
+
+        for (int i = 0; i < kruskalEdge.size(); i++) {
+            this.kruskalEdge.add(kruskalEdge.get(i));
+            repaint();
+            System.out.println("Added Edge: " + kruskalEdge.get(i));
+        }
+    }
+
 
     private class ClickListener implements MouseListener, MouseMotionListener {
 

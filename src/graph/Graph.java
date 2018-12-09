@@ -1,14 +1,19 @@
 package graph;
 
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Graph {
 
     private HashMap<Vertex, TreeSet<Edge>> adjList;
     private Vertex root;
+    private ArrayList<Edge> kruskalEdge;
+    private ArrayList<Edge> primEdge;
 
     public Graph() {
         adjList = new HashMap<>();
+        kruskalEdge = new ArrayList<>();
+        primEdge = new ArrayList<>();
     }
 
     public Edge addEdge(Vertex v1, Vertex v2) {
@@ -44,8 +49,11 @@ public class Graph {
        }
        TreeSet<Edge> edges = getAllEdges();
        minSpannning.addEdge(edges.first());
+       this.kruskalEdge.add(edges.first());
        while (minSpannning.getAllEdges().size()<this.adjList.size()-1){
-           minSpannning.addEdge(cheapestEdgetoTake(minSpannning));
+           Edge cheapest = cheapestEdgetoTake(minSpannning);
+           minSpannning.addEdge(cheapest);
+           this.kruskalEdge.add(cheapest);
        }
        return minSpannning;
     }
@@ -84,7 +92,6 @@ public class Graph {
         }
         return false;
     }
-
 
 
     public Graph prim(Vertex root) {
@@ -127,6 +134,14 @@ public class Graph {
             edges.addAll(this.adjList.get(v));
         }
         return edges;
+    }
+
+    public ArrayList<Edge> getKruskalEdge(){
+        return kruskalEdge;
+    }
+
+    public ArrayList<Edge> getPrimEdge(){
+        return primEdge;
     }
 
     @Override
