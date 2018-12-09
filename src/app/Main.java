@@ -24,7 +24,7 @@ public class Main {
         graph.addEdge(vertex5,vertex2);
         graph.addEdge(vertex4,vertex5);
 
-        Window window = new Window(graph.prim());
+        Window window = new Window(new Graph());
 
     }
 }

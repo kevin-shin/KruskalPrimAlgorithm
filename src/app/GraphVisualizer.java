@@ -4,16 +4,35 @@ import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class GraphVisualizer extends JPanel {
 
     private Graph graph;
+    private static BufferedImage map;
+    public static final int VERTEX_WIDTH=10;
+    public static final int EDGE_WIDTH=2;
+
+    static {
+        map = null;
+        try {
+            map = ImageIO.read(new File("res/MacalesterMap.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("broken");
+        }
+    }
 
     public GraphVisualizer(Graph g) {
         super();
@@ -25,18 +44,30 @@ public class GraphVisualizer extends JPanel {
         return graph;
     }
 
+    private Vertex vertexAt(double x, double y) {
+        for (Vertex v: graph.getAdjList().keySet()) {
+            if (v.getX()>=x-VERTEX_WIDTH/2 && v.getX()<=x+VERTEX_WIDTH/2 &&
+                    v.getY()>=y-VERTEX_WIDTH/2 && v.getY()<=y+VERTEX_WIDTH) {
+                return v;
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(map,0,0,null);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.BLACK);
         for (Edge e : graph.getAllEdges()) {
-            g2.setStroke(new BasicStroke(2));
+            g2.setStroke(new BasicStroke(EDGE_WIDTH));
             g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                     e.getVertex2().getX(), e.getVertex2().getY()));
         }
         for (Vertex v : this.graph.getAdjList().keySet()) {
-            Ellipse2D node = new Ellipse2D.Double(v.getX() - 5, v.getY() - 5, 10, 10);
+            Ellipse2D node = new Ellipse2D.Double(v.getX() - VERTEX_WIDTH/2, v.getY() - VERTEX_WIDTH/2,
+                    VERTEX_WIDTH, VERTEX_WIDTH);
             g2.fill(node);
             g2.draw(node);
 
@@ -45,19 +76,37 @@ public class GraphVisualizer extends JPanel {
     }
 
     private class ClickListener implements MouseListener {
+        private double lastPressX;
+        private double lastPressY;
+
         @Override
         public void mouseClicked(MouseEvent e) {
-            System.out.println(graph);
+            if (vertexAt(e.getX(),e.getY()) == null) {
+                graph.addVertex(new Vertex(Long.toHexString(System.currentTimeMillis()), e.getX(), e.getY()));
+                repaint();
+                System.out.println(graph);
+            }
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-
+            this.lastPressX = e.getX();
+            this.lastPressY = e.getY();
+            System.out.println("press");
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
+            Vertex start = vertexAt(lastPressX,lastPressY);
+            Vertex end = vertexAt(e.getX(),e.getY());
 
+            if (start != null && end !=null && !start.equals(end)) {
+                graph.addEdge(start,end);
+                System.out.println("EDGE ADDED");
+            }
+
+            repaint();
+            System.out.println("release");
         }
 
         @Override
