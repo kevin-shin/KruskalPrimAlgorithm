@@ -27,7 +27,7 @@ public class GraphVisualizer extends JPanel {
         //load in the background image
         map = null;
         try {
-            map = ImageIO.read(new File("res/MacalesterMapResized.jpg"));
+            map = ImageIO.read(GraphVisualizer.class.getResource("/MacalesterMapResized.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
