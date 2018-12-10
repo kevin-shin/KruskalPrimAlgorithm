@@ -5,11 +5,12 @@ import graph.Graph;
 import graph.Vertex;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
 
     public static void main(String args[]) {
-        //Testing
+        // Create a preset Vertex set
         Graph graph = new Graph();
 
         ArrayList<Vertex> list = new ArrayList<>();
@@ -69,5 +70,5 @@ public class Main {
 
         Window window = new Window(graph);
     }
-    }
+}
 

@@ -28,7 +28,7 @@ public class Edge implements Comparable<Edge> {
         if (obj != null && obj instanceof Edge) {
             Edge edge = (Edge) obj;
             return this.vertex1.equals(edge.vertex1)
-                    && this.vertex2.equals(edge.vertex2) && this.weight==edge.weight;
+                    && this.vertex2.equals(edge.vertex2) && this.weight == edge.weight;
         }
         return false;
     }
