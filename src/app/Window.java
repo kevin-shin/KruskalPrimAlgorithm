@@ -20,15 +20,17 @@ public class Window extends JFrame {
     private JButton completeButton;
     private JButton primButton;
     private JButton clearButton;
+    private JButton toggleEdges;
 
 
     public Window(Graph g) {
         super("Test");
 
-        kruskalButton = new JButton("Kruskal");
+        kruskalButton = new JButton("Run Kruskal's");
         completeButton = new JButton("Complete Graph");
-        primButton = new JButton("Prim");
+        primButton = new JButton("Run Prim's");
         clearButton = new JButton("Clear Graph");
+        toggleEdges = new JButton("Toggle Edge Visibility");
 
 
         this.graphPanel = new GraphVisualizer(g);
@@ -36,9 +38,10 @@ public class Window extends JFrame {
 
         this.panel.add(graphPanel);
         this.panel.add(kruskalButton);
-        this.panel.add(completeButton);
         this.panel.add(primButton);
+        this.panel.add(completeButton);
         this.panel.add(clearButton);
+        this.panel.add(toggleEdges);
 
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         graphPanel.setPreferredSize(new Dimension(1200, 600));
@@ -46,9 +49,10 @@ public class Window extends JFrame {
         this.getContentPane().add(panel);
 
         kruskalButton.addActionListener(new ButtonListener());
-        completeButton.addActionListener(new completeGraphListener());
+        completeButton.addActionListener(new ButtonListener());
         primButton.addActionListener(new ButtonListener());
         clearButton.addActionListener(new ButtonListener());
+        toggleEdges.addActionListener(new ButtonListener());
 
         this.pack();
         this.setVisible(true);
@@ -60,30 +64,21 @@ public class Window extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == kruskalButton){
+            if (e.getSource() == kruskalButton) {
                 graphPanel.getGraph().kruskal();
                 graphPanel.setKruskalEdgeOrder(graphPanel.getGraph().getKruskalEdgeOrder());
                 graphPanel.startKruskalAnimation();
-            }
-
-            else if (e.getSource() == primButton) {
+            } else if (e.getSource() == primButton) {
                 graphPanel.getGraph().prim();
                 graphPanel.setPrimEdgeOrder(graphPanel.getGraph().getPrimEdgeOrder());
                 graphPanel.startPrimAnimation();
-            }
-
-            else if (e.getSource() == clearButton){
+            } else if (e.getSource() == clearButton) {
                 graphPanel.setGraph(new Graph());
-            }
-        }
-    }
-
-    private class completeGraphListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == completeButton) {
+            } else if (e.getSource() == toggleEdges) {
+                graphPanel.setHideEdges(!graphPanel.isHideEdges());
+            } else if (e.getSource() == completeButton) {
                 graphPanel.completeGraph();
             }
-            }
         }
     }
+}

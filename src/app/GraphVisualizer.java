@@ -11,10 +11,8 @@ import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 public class GraphVisualizer extends JPanel {
 
@@ -44,7 +42,7 @@ public class GraphVisualizer extends JPanel {
     private ArrayList<Edge> primEdgeOrder;
     private Timer kruskalTimer;
     private Timer primTimer;
-    private boolean algorithmDone;
+    private boolean hideEdges;
 
 
     public GraphVisualizer(Graph g) {
@@ -77,6 +75,15 @@ public class GraphVisualizer extends JPanel {
         this.primEdgeOrder = primEdgeOrder;
     }
 
+    public void setHideEdges(boolean hideEdges) {
+        this.hideEdges = hideEdges;
+        repaint();
+    }
+
+    public boolean isHideEdges() {
+        return hideEdges;
+    }
+
     private Vertex vertexAt(double x, double y) {
         for (Vertex v : graph.getAdjList().keySet()) {
             if (v.getX() >= x - VERTEX_WIDTH / 2 && v.getX() <= x + VERTEX_WIDTH / 2 &&
@@ -99,7 +106,7 @@ public class GraphVisualizer extends JPanel {
             g2.draw(new Line2D.Double(lastPressX, lastPressY, currentX, currentY));
         }
 
-        if (!algorithmDone) {
+        if (!hideEdges) {
             for (Edge e : graph.getAllEdges()) {
                 g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY()));
@@ -160,7 +167,7 @@ public class GraphVisualizer extends JPanel {
         repaint();
         if (kruskalEdgeOrder.size() == 0) {
             kruskalTimer.stop();
-            algorithmDone = true;
+            hideEdges = true;
 
         }
     }
@@ -170,12 +177,12 @@ public class GraphVisualizer extends JPanel {
         repaint();
         if (primEdgeOrder.size() == 0) {
             primTimer.stop();
-            algorithmDone = true;
+            hideEdges = true;
         }
     }
 
     public void completeGraph() {
-        algorithmDone = false;
+        hideEdges = false;
         Graph completegraph = new Graph();
         for (Vertex vertex : this.graph.getAdjList().keySet()) {
             completegraph.addVertex(vertex);
