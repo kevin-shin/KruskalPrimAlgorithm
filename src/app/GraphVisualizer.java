@@ -100,7 +100,7 @@ public class GraphVisualizer extends JPanel {
         }
 
         if (!algorithmDone) {
-            for (Edge e : graph.getAllEdges()) {
+            for (Edge e : graph.getEdges()) {
                 g2.draw(new Line2D.Double(e.getVertex1().getX(), e.getVertex1().getY(),
                         e.getVertex2().getX(), e.getVertex2().getY()));
             }
