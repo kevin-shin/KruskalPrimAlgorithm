@@ -1,16 +1,13 @@
 package app;
 
-import graph.Edge;
+
 import graph.Graph;
-import graph.Vertex;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.TimerTask;
+
 
 public class Window extends JFrame {
 
@@ -22,16 +19,14 @@ public class Window extends JFrame {
     private JButton clearButton;
     private JButton toggleEdges;
 
-
     public Window(Graph g) {
-        super("Test");
-
+        super("Prim's and Kruskal's Visualizer");
+        //set up UI
         kruskalButton = new JButton("Run Kruskal's");
         completeButton = new JButton("Complete Graph");
         primButton = new JButton("Run Prim's");
         clearButton = new JButton("Clear Graph");
         toggleEdges = new JButton("Toggle Edge Visibility");
-
 
         this.graphPanel = new GraphVisualizer(g);
         this.panel = new JPanel();
@@ -56,15 +51,17 @@ public class Window extends JFrame {
 
         this.pack();
         this.setVisible(true);
-
-
     }
 
+    /**
+     * A class for listening to button presses
+     */
     private class ButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == kruskalButton) {
+                // Generate the graph, get the edges in order, start animation
                 graphPanel.getGraph().kruskal();
                 graphPanel.setKruskalEdgeOrder(graphPanel.getGraph().getKruskalEdgeOrder());
                 graphPanel.startKruskalAnimation();
@@ -75,7 +72,7 @@ public class Window extends JFrame {
             } else if (e.getSource() == clearButton) {
                 graphPanel.setGraph(new Graph());
             } else if (e.getSource() == toggleEdges) {
-                graphPanel.setHideEdges(!graphPanel.isHideEdges());
+                graphPanel.setEdgesHidden(!graphPanel.isEdgesHidden());
             } else if (e.getSource() == completeButton) {
                 graphPanel.completeGraph();
             }
