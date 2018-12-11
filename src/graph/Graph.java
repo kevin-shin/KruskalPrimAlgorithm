@@ -12,9 +12,9 @@ public class Graph {
 
     public Graph() {
         adjList = new HashMap<>();
+        Edges = new TreeSet<>();
         kruskalEdgeOrder = new ArrayList<>();
         primEdgeOrder = new ArrayList<>();
-        Edges = new TreeSet<>();
     }
 
     private Graph prim(Vertex root) {
