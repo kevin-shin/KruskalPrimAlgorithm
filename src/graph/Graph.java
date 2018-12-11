@@ -17,6 +17,11 @@ public class Graph {
         primEdgeOrder = new ArrayList<>();
     }
 
+    /**
+     * Finds a minimum spanning tree by Prim's, and records the primEdgeOrder for use in GraphVisualizer
+     *
+     * @return a Graph minimum spanning tree
+     */
     private Graph prim(Vertex root) {
         Graph minSpanning = new Graph();
         minSpanning.addVertex(root);
@@ -43,11 +48,7 @@ public class Graph {
         return minSpanning;
     }
 
-    /**
-     * Finds a minimum spanning tree by Prim's, and records the primEdgeOrder for use in GraphVisualizer
-     *
-     * @return a Graph minimum spanning tree
-     */
+
     public Graph prim() {
         return prim(this.root);
 
