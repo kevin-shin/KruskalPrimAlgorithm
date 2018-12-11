@@ -61,19 +61,19 @@ public class Graph {
      * @return a Graph minimum spanning tree
      */
     public Graph kruskal() {
-        Graph minSpannning = new Graph();
+        Graph minSpanning = new Graph();
         for (Vertex vertex : this.adjList.keySet()) {
-            minSpannning.addVertex(vertex);
+            minSpanning.addVertex(vertex);
         }
-        minSpannning.addEdge(Edges.first());
+        minSpanning.addEdge(Edges.first());
         this.kruskalEdgeOrder.add(Edges.first());
-        while (minSpannning.getAllEdges().size() < this.adjList.size() - 1) {
-            Edge cheapest = cheapestEdgetoTake(minSpannning);
-            minSpannning.addEdge(cheapest);
+        while (minSpanning.getAllEdges().size() < this.adjList.size() - 1) {
+            Edge cheapest = cheapestEdgetoTake(minSpanning);
+            minSpanning.addEdge(cheapest);
             this.kruskalEdgeOrder.add(cheapest);
 
         }
-        return minSpannning;
+        return minSpanning;
     }
 
     private Edge cheapestEdgetoTake(Graph minSpanning) {
