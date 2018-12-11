@@ -6,6 +6,7 @@ public class Graph {
 
     private HashMap<Vertex, TreeSet<Edge>> adjList;
     private Vertex root;
+    private TreeSet<Edge> Edges;
     private ArrayList<Edge> kruskalEdgeOrder; // Edges in order according to Kruskal's
     private ArrayList<Edge> primEdgeOrder; // Edges in order according to Prim's
 
@@ -13,6 +14,7 @@ public class Graph {
         adjList = new HashMap<>();
         kruskalEdgeOrder = new ArrayList<>();
         primEdgeOrder = new ArrayList<>();
+        Edges = new TreeSet<>();
     }
 
     private Graph prim(Vertex root) {
@@ -62,22 +64,19 @@ public class Graph {
         for (Vertex vertex : this.adjList.keySet()) {
             minSpannning.addVertex(vertex);
         }
-        TreeSet<Edge> edges = getAllEdges();
-        minSpannning.addEdge(edges.first());
-        this.kruskalEdgeOrder.add(edges.first());
+        minSpannning.addEdge(Edges.first());
+        this.kruskalEdgeOrder.add(Edges.first());
         while (minSpannning.getAllEdges().size() < this.adjList.size() - 1) {
             Edge cheapest = cheapestEdgetoTake(minSpannning);
             minSpannning.addEdge(cheapest);
             this.kruskalEdgeOrder.add(cheapest);
 
         }
-        System.out.println("Kruskal algorithm edge size: " + this.kruskalEdgeOrder.size());
         return minSpannning;
     }
 
     private Edge cheapestEdgetoTake(Graph minSpanning) {
-        TreeSet<Edge> edges = this.getAllEdges();
-        for (Edge edge : edges) {
+        for (Edge edge : Edges) {
             if (!willFormCycle(edge, minSpanning)) {
                 return edge;
             }
@@ -110,17 +109,16 @@ public class Graph {
 
     //Helper Methods
 
-    public Edge addEdge(Vertex v1, Vertex v2) {
+    public void addEdge(Vertex v1, Vertex v2) {
         double weight = Vertex.distance(v1, v2);
         Edge e = new Edge(weight, v1, v2);
         adjList.get(v1).add(e);
         adjList.get(v2).add(e);
-
-        return e;
+        Edges.add(e);
     }
 
-    public Edge addEdge(Edge e) {
-        return addEdge(e.getVertex1(), e.getVertex2());
+    public void addEdge(Edge e) {
+       addEdge(e.getVertex1(), e.getVertex2());
     }
 
     public void addVertex(Vertex... v) {
@@ -141,11 +139,7 @@ public class Graph {
     }
 
     public TreeSet<Edge> getAllEdges() {
-        TreeSet<Edge> edges = new TreeSet<>();
-        for (Vertex v : this.adjList.keySet()) {
-            edges.addAll(this.adjList.get(v));
-        }
-        return edges;
+        return Edges;
     }
 
     public ArrayList<Edge> getKruskalEdgeOrder() {
