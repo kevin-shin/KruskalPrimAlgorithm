@@ -13,9 +13,9 @@ The window contains a panel with the map of Macalester and preloaded vertices, a
 - Clear Graph: clears the graph of vertices and edges
 - Toggle Edge Visibility: Useful function to see the map with just the vertices. Click once to hide edges and click again to reinstate them. 
 
-####Testing for Correctness: 
+#### Testing for Correctness: 
 Both Prim's algorithm and Krukskal's algorithm consistently produce the same graphs. We can prove that given distinct weights, a graph has a unique minimum spanning tree, but this is not guaranteed if there are equal weights in the graph. Thus, we do not necessarily expect the same results every single time, but equivalent minimum spanning trees is a good indicator that the algorithms are correct. The algorithms themselves were tested before implementing them into the JFrame.
 
-####Further Improvements: 
+#### Further Improvements: 
 Although distance is the default for weights, our program allows for edges to be instantiated with any weight, and so this program would be able to accomodate other metrics as well. The JFrame is defined to hold a map of Macalester, but this image can also be replaced, depending on how this program is used. Other maps can be uploaded into the program, or no image can be used, perhaps as a didactic tool to illustrate the algorithms. 
 
